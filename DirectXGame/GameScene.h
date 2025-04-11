@@ -25,5 +25,6 @@ private:
     // 3Dモデル
     KamataEngine::Model* model_ = nullptr;
     // カメラ
+    KamataEngine::Camera camera_;
 };
 
