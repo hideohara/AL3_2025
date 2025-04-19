@@ -1,8 +1,8 @@
 
 #pragma once
 #include "KamataEngine.h"
-
 #include "Player.h"
+#include <vector>
 
 
 // ゲームシーン
@@ -32,6 +32,13 @@ private:
 
     // 自キャラ
     Player* player_ = nullptr;
+
+    // 3Dモデル ブロック
+    KamataEngine::Model* modelBlock_ = nullptr;
+
+    // ブロック
+    std::vector<KamataEngine::WorldTransform*> worldTransformBlocks_;
+
 
 
 };
