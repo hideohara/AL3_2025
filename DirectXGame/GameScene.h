@@ -37,11 +37,16 @@ private:
     KamataEngine::Model* modelBlock_ = nullptr;
 
     // ブロック
-    //std::vector<KamataEngine::WorldTransform*> worldTransformBlocks_;
-
     std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
+    // デバッグカメラ有効
+    bool isDebugCameraActive_ = false;
 
+    // デバッグカメラ
+    KamataEngine::DebugCamera* debugCamera_ = nullptr;
+
+    // キー入力
+    KamataEngine::Input* input_ = nullptr;
 
 
 

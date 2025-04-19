@@ -9,8 +9,9 @@ GameScene::~GameScene()
 	delete model_;
 	delete modelBlock_;
 
-	// 自キャラの解放
+
 	delete player_;
+	delete debugCamera_;
 
 	// ブロック
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -70,8 +71,11 @@ void GameScene::Initialize()
 		}
 	}
 
+	// デバッグカメラの生成
+	debugCamera_ = new DebugCamera(1280, 720);
 
-
+	// キー入力の初期化
+	input_ = Input::GetInstance();
 }
 
 
@@ -82,6 +86,29 @@ void GameScene::Update()
 	// 自キャラの更新
 	player_->Update();
 
+	// デバッグカメラの更新
+	//debugCamera_->Update();
+
+#ifdef _DEBUG
+	if (input_->TriggerKey(DIK_D)) {
+		//デバッグカメラ有効フラグをトグル
+		isDebugCameraActive_ = !isDebugCameraActive_;
+	}
+#endif
+
+	// カメラの処理
+	if (isDebugCameraActive_) {
+		// デバッグカメラの更新
+		debugCamera_->Update();
+			camera_.matView = debugCamera_->GetCamera().matView;
+		camera_.matProjection = debugCamera_->GetCamera().matProjection;
+		// ビュープロジェクション行列の転送
+		camera_.TransferMatrix();
+	}
+	else {
+		// ビュープロジェクション行列の更新と転送
+		camera_.UpdateMatrix();
+	}
 
 
 	// ブロックの更新
@@ -91,7 +118,7 @@ void GameScene::Update()
 				continue;
 
 			//アフィン変換行列の作成
-			worldTransformBlock->matWorld_ = MakeAffin(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			worldTransformBlock->matWorld_ = MakeAffine(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
 		}
