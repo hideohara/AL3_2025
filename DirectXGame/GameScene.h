@@ -37,7 +37,11 @@ private:
     KamataEngine::Model* modelBlock_ = nullptr;
 
     // ブロック
-    std::vector<KamataEngine::WorldTransform*> worldTransformBlocks_;
+    //std::vector<KamataEngine::WorldTransform*> worldTransformBlocks_;
+
+    std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
+
+
 
 
 
