@@ -1,17 +1,14 @@
-#include "Player.h"
-//#include <cassert>
+#include "Skydome.h"
 
 using namespace KamataEngine;
 
 // 初期化
-void Player::Initialize(Model* model, uint32_t textureHandle, Camera* camera)
-//void Player::Initialize(Model* model, uint32_t textureHandle)
+void Skydome::Initialize(Model* model, Camera* camera)
 {
 	// NULLポインタチェック
 	assert(model);
 
 	// 引数として受け取ったデータをメンバ変数に記録する
-	textureHandle_ = textureHandle;
 	model_ = model;
 
 	// 引数の内容をメンバ変数に記録
@@ -22,15 +19,15 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Camera* camera)
 }
 
 // 更新
-void Player::Update()
+void Skydome::Update()
 {
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 }
 
 // 描画
-void Player::Draw()
+void Skydome::Draw()
 {
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *camera_, textureHandle_);
+	model_->Draw(worldTransform_, *camera_);
 }

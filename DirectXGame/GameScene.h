@@ -2,6 +2,7 @@
 #pragma once
 #include "KamataEngine.h"
 #include "Player.h"
+#include "Skydome.h"
 #include <vector>
 
 
@@ -48,7 +49,11 @@ private:
     // キー入力
     KamataEngine::Input* input_ = nullptr;
 
+    // 3Dモデル スカイドーム
+    KamataEngine::Model* modelSkydome_ = nullptr;
 
+    // スカイドーム
+    Skydome* skydome_ = nullptr;
 
 };
 

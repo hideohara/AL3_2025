@@ -6,11 +6,14 @@ using namespace KamataEngine;
 // デストラクタ
 GameScene::~GameScene()
 {
+	// モデル
 	delete model_;
 	delete modelBlock_;
+	delete modelSkydome_;
 
-
+	// クラス
 	delete player_;
+	delete skydome_;
 	delete debugCamera_;
 
 	// ブロック
@@ -42,6 +45,7 @@ void GameScene::Initialize()
 
 	// 3Dモデルの生成 ブロック 
 	modelBlock_ = Model::CreateFromOBJ("cube");
+
 
 
 	// 要素数
@@ -76,6 +80,14 @@ void GameScene::Initialize()
 
 	// キー入力の初期化
 	input_ = Input::GetInstance();
+
+	// 3Dモデルの生成
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	// スカイドームの生成
+	skydome_ = new Skydome();
+	// スカイドームの初期化
+	skydome_->Initialize(modelSkydome_, &camera_);
+
 }
 
 
@@ -85,6 +97,9 @@ void GameScene::Update()
 
 	// 自キャラの更新
 	player_->Update();
+
+	// スカイドームの更新
+	skydome_->Update();
 
 	// デバッグカメラの更新
 	//debugCamera_->Update();
@@ -140,6 +155,10 @@ void GameScene::Draw()
 	// 
 	// 自キャラの描画
 	//player_->Draw();
+
+	// スカイドームの描画
+	skydome_->Draw();
+
 
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
