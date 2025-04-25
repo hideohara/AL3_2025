@@ -133,7 +133,7 @@ void GameScene::Update()
 				continue;
 
 			//アフィン変換行列の作成
-			worldTransformBlock->matWorld_ = MakeAffine(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
 		}
