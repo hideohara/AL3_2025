@@ -22,3 +22,12 @@ KamataEngine::Matrix4x4 MakeAffineMatrix(KamataEngine::Vector3 &scale, KamataEng
 	return  matWorld;
 
 }
+
+// 行列を計算・転送する
+//void UpdateMatrix(WorldTransform& worldTransform)
+//{
+//	// スケール、回転、平行移動を合成して行列を計算する
+//	worldTransform.matWorld_ = MakeAffineMatrix(worldTransform.scale_, worldTransform.rotation_, worldTransform.translation_);
+//	// 定数バッファへの書き込み
+//	worldTransform.TransferMatrix();
+//}

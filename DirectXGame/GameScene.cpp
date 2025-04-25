@@ -34,7 +34,8 @@ void GameScene::Initialize()
 	// ファイル名を指定してテクスチャを読み込む
 	textureHandle_ = TextureManager::Load("uvChecker.png");
 	// 3Dモデルの生成
-	model_ = Model::Create();
+	//model_ = Model::Create();
+	model_ = Model::CreateFromOBJ("player");
 	// カメラの初期化
 	camera_.Initialize();
 
@@ -44,7 +45,7 @@ void GameScene::Initialize()
 	player_->Initialize(model_, textureHandle_, &camera_);
 
 	// 3Dモデルの生成 ブロック 
-	modelBlock_ = Model::CreateFromOBJ("cube");
+	modelBlock_ = Model::CreateFromOBJ("block");
 
 
 
@@ -136,6 +137,9 @@ void GameScene::Update()
 			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
+
+			// 行列を計算・転送する
+			//UpdateMatrix(*worldTransformBlock);
 		}
 	}
 
@@ -154,7 +158,7 @@ void GameScene::Draw()
 	//ここに3Dモデルインスタンスの描画処理を記述する
 	// 
 	// 自キャラの描画
-	//player_->Draw();
+	player_->Draw();
 
 	// スカイドームの描画
 	skydome_->Draw();
@@ -171,8 +175,6 @@ void GameScene::Draw()
 
 	// 3Dモデル描画後処理
 	Model::PostDraw();
-
-
 
 }
 
