@@ -12,4 +12,6 @@ KamataEngine::Matrix4x4 MakeAffineMatrix(KamataEngine::Vector3 &scale, KamataEng
 /// </summary>
 //void UpdateMatrix(KamataEngine::WorldTransform& worldTransform);
 
+// イージング
+float EaseInOut(float x1, float x2, float t);
 

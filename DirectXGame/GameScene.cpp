@@ -42,10 +42,6 @@ void GameScene::Initialize()
 	// カメラの初期化
 	camera_.Initialize();
 
-	// 自キャラの生成
-	player_ = new Player();
-	// 自キャラの初期化
-	player_->Initialize(model_, textureHandle_, &camera_);
 
 	// 3Dモデルの生成 ブロック 
 	modelBlock_ = Model::CreateFromOBJ("block");
@@ -55,6 +51,13 @@ void GameScene::Initialize()
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 	// 表示ブロックの生成
 	GenerateBlocks();
+
+	// 自キャラの生成
+	player_ = new Player();
+	// 自キャラの初期化
+	// 座標をマップチップ番号で指定
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	player_->Initialize(model_, &camera_, playerPosition);
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
