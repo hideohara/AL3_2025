@@ -4,7 +4,7 @@
 #include "Player.h"
 #include "Skydome.h"
 #include <vector>
-
+#include "MapChipField.h"
 
 // ゲームシーン
 class GameScene
@@ -54,6 +54,14 @@ private:
 
     // スカイドーム
     Skydome* skydome_ = nullptr;
+
+    // マップチップフィールド
+    MapChipField* mapChipField_;
+
+    // 表示ブロックの生成
+    void GenerateBlocks();
+
+
 
 };
 
