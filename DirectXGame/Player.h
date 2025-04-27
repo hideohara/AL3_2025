@@ -20,6 +20,11 @@ public:
     // 描画
     void Draw();
 
+    const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
+
+
+    const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
+
 private:
     // ワールド変換データ
     KamataEngine::WorldTransform worldTransform_;
@@ -35,7 +40,7 @@ private:
     // 減速
     static inline const float kAttenuation = 0.05f;
     // 最大速度
-    static inline const float kLimitRunSpeed = 1.0f;
+    static inline const float kLimitRunSpeed = 0.5f;
 
 
     // 左右
@@ -62,6 +67,7 @@ private:
     static inline const float kLimitFallSpeed = 1.0f;
     // ジャンプ初速（上方向）
     static inline const float kJumpAcceleration = 1.0f;
+
 
 };
 

@@ -11,11 +11,6 @@ GameScene::~GameScene()
 	delete modelBlock_;
 	delete modelSkydome_;
 
-	// クラス
-	delete player_;
-	delete skydome_;
-	delete debugCamera_;
-
 	// ブロック
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -25,9 +20,12 @@ GameScene::~GameScene()
 
 	worldTransformBlocks_.clear();
 
-
-	// マップチップフィールドの解放
+	// クラス
+	delete player_;
+	delete skydome_;
+	delete debugCamera_;
 	delete mapChipField_;
+	delete cameraController_;
 
 }
 
@@ -56,7 +54,7 @@ void GameScene::Initialize()
 	player_ = new Player();
 	// 自キャラの初期化
 	// 座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 17);
 	player_->Initialize(model_, &camera_, playerPosition);
 
 	// デバッグカメラの生成
@@ -71,6 +69,15 @@ void GameScene::Initialize()
 	skydome_ = new Skydome();
 	// スカイドームの初期化
 	skydome_->Initialize(modelSkydome_, &camera_);
+
+	// カメラコントローラの生成
+	cameraController_ = new CameraController();
+	cameraController_->Initialize();
+	cameraController_->SetTarget(player_);
+	cameraController_->Reset();
+
+	CameraController::Rect cameraArea = { 12.0f, 100 - 12.0f, 6.0f, 6.0f };
+	cameraController_->SetMovableArea(cameraArea);
 
 }
 
@@ -87,6 +94,9 @@ void GameScene::Update()
 
 	// デバッグカメラの更新
 	//debugCamera_->Update();
+
+	// カメラコントローラ
+	cameraController_->Update();
 
 #ifdef _DEBUG
 	if (input_->TriggerKey(DIK_0)) {
@@ -105,8 +115,10 @@ void GameScene::Update()
 		camera_.TransferMatrix();
 	}
 	else {
-		// ビュープロジェクション行列の更新と転送
-		camera_.UpdateMatrix();
+		camera_.matView = cameraController_->GetViewProjection().matView;
+		camera_.matProjection = cameraController_->GetViewProjection().matProjection;
+		// ビュープロジェクション行列の転送
+		camera_.TransferMatrix();
 	}
 
 

@@ -5,6 +5,7 @@
 #include "Skydome.h"
 #include <vector>
 #include "MapChipField.h"
+#include "CameraController.h"
 
 // ゲームシーン
 class GameScene
@@ -61,7 +62,7 @@ private:
     // 表示ブロックの生成
     void GenerateBlocks();
 
-
-
+    // カメラコントローラ
+    CameraController* cameraController_;
 };
 
