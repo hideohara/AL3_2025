@@ -56,6 +56,7 @@ void GameScene::Initialize()
 	// 座標をマップチップ番号で指定
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 17);
 	player_->Initialize(model_, &camera_, playerPosition);
+	player_->SetMapChipField(mapChipField_);
 
 	// デバッグカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
