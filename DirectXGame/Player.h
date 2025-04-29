@@ -1,6 +1,7 @@
 #pragma once
 
 #include "KamataEngine.h"
+#include "MapChipField.h"
 
 class MapChipField;
 
@@ -80,11 +81,48 @@ private:
     static inline const float kWidth = 0.8f;
     static inline const float kHeight = 0.8f;
 
+    // マップとの当たり判定情報
+    struct CollisionMapInfo {
+        bool ceiling = false;
+        bool landing = false;
+        bool hitWall = false;
+        KamataEngine::Vector3 move;
+    };
+
     // ①移動入力
     void InputMove();
 
+    // ②マップ衝突チェック
+    void CheckMapCollision(CollisionMapInfo& info);
+    void CheckMapCollisionUp(CollisionMapInfo& info);
+
+    // ③判定結果を反映して移動させる
+    void CheckMapMove(const CollisionMapInfo& info);
+
+    // ④天井に接触している場合の処理
+    void CheckMapCeiling(const CollisionMapInfo& info);
+
     // ⑦旋回制御
     void AnimateTurn();
+
+
+
+
+    // 角
+    enum Corner {
+        kRightBottom,    // 右下
+        kLeftBottom,     // 左下
+        kRightTop,       // 右上
+        kLeftTop,        // 左上
+
+        kNumCorner       // 要素数
+    };
+
+    // 指定した角の座標計算
+    KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
+
+    static inline const float kBlank = 0.1f;
+
 
 
 };
