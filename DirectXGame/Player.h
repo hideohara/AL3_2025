@@ -80,5 +80,12 @@ private:
     static inline const float kWidth = 0.8f;
     static inline const float kHeight = 0.8f;
 
+    // ①移動入力
+    void InputMove();
+
+    // ⑦旋回制御
+    void AnimateTurn();
+
+
 };
 

@@ -29,7 +29,78 @@ void Player::Initialize(Model* model, Camera* camera, const Vector3& position)
 // 更新
 void Player::Update()
 {
+	// ①移動入力
+	InputMove();
 
+	// ②移動量を加味して衝突判定する
+
+	// ③判定結果を反映して移動させる
+	// 移動
+	worldTransform_.translation_ += velocity_;
+
+	// ④天井に接触している場合の処理
+
+	// ⑤壁に接触している場合の処理
+
+	// ⑥接地状態の切り替え
+
+	// 着地フラグ
+	bool landing = false;
+
+	// 地面との当たり判定
+	// 下降中？
+	if (velocity_.y < 0) {
+		// Y座標が地面以下になったら着地
+		if (worldTransform_.translation_.y <= 1.0f) {
+			landing = true;
+		}
+	}
+
+	// 接地判定
+	if (onGround_) {
+		// ジャンプ開始
+		if (velocity_.y > 0.0f) {
+			// 空中状態に移行
+			onGround_ = false;
+		}
+	}
+	else {
+		// 着地
+		if (landing) {
+			// めり込み排斥
+			worldTransform_.translation_.y = 1.0f;
+			// 摩擦で横方向速度が減衰する
+			velocity_.x *= (1.0f - kAttenuation);
+			// 下方向速度をリセット
+			velocity_.y = 0.0f;
+			// 接地状態に移行
+			onGround_ = true;
+		}
+	}
+
+
+	// ⑦旋回制御
+	AnimateTurn();
+
+	// ⑧行列計算
+	//アフィン変換行列の作成
+	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+
+	// 行列を定数バッファに転送
+	worldTransform_.TransferMatrix();
+}
+
+// 描画
+
+void Player::Draw()
+{
+	// 3Dモデルを描画
+	model_->Draw(worldTransform_, *camera_);
+}
+
+// ①移動入力
+void Player::InputMove()
+{
 	// 接地状態
 	if (onGround_) {
 
@@ -91,45 +162,12 @@ void Player::Update()
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
-	// 着地フラグ
-	bool landing = false;
+}
 
-	// 地面との当たり判定
-	// 下降中？
-	if (velocity_.y < 0) {
-		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <= 1.0f) {
-			landing = true;
-		}
-	}
-
-	// 接地判定
-	if (onGround_) {
-		// ジャンプ開始
-		if (velocity_.y > 0.0f) {
-			// 空中状態に移行
-			onGround_ = false;
-		}
-	}
-	else {
-		// 着地
-		if (landing) {
-			// めり込み排斥
-			worldTransform_.translation_.y = 1.0f;
-			// 摩擦で横方向速度が減衰する
-			velocity_.x *= (1.0f - kAttenuation);
-			// 下方向速度をリセット
-			velocity_.y = 0.0f;
-			// 接地状態に移行
-			onGround_ = true;
-		}
-	}
-
-	// 移動
-	worldTransform_.translation_ += velocity_;
-
-	// 旋回制御
-	if (turnTimer_ > 0.0f){
+// ⑦旋回制御
+void Player::AnimateTurn()
+{
+	if (turnTimer_ > 0.0f) {
 		turnTimer_ -= 1.0f / 60.0f;
 		// 左右の自キャラ角度テーブル
 		float destinationRotationYTable[] = {
@@ -143,19 +181,4 @@ void Player::Update()
 			EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 
 	}
-
-
-	//アフィン変換行列の作成
-	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	// 行列を定数バッファに転送
-	worldTransform_.TransferMatrix();
-}
-
-// 描画
-
-void Player::Draw()
-{
-	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *camera_);
 }
