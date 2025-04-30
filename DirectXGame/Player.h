@@ -96,6 +96,8 @@ private:
     void CheckMapCollision(CollisionMapInfo& info);
     void CheckMapCollisionUp(CollisionMapInfo& info);
     void CheckMapCollisionDown(CollisionMapInfo& info);
+    void CheckMapCollisionRight(CollisionMapInfo& info);
+    void CheckMapCollisionLeft(CollisionMapInfo& info);
 
     // ③判定結果を反映して移動させる
     void CheckMapMove(const CollisionMapInfo& info);
