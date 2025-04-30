@@ -33,63 +33,24 @@ void Player::Update()
 	InputMove();
 
 	// ②移動量を加味して衝突判定する
-
 	// 衝突情報を初期化
 	CollisionMapInfo collisionMapInfo;
 	// 移動量に速度の値をコピー
 	collisionMapInfo.move = velocity_;
-
 	// マップ衝突チェック
 	CheckMapCollision(collisionMapInfo);
 
-
 	// ③判定結果を反映して移動させる
-	// 移動
-	//worldTransform_.translation_ += velocity_;
 	CheckMapMove(collisionMapInfo);
 
 	// ④天井に接触している場合の処理
 	CheckMapCeiling(collisionMapInfo);
 
 	// ⑤壁に接触している場合の処理
+	CheckMapWall(collisionMapInfo);
 
 	// ⑥接地状態の切り替え
 	CheckMapLanding(collisionMapInfo);
-
-	// 着地フラグ
-	bool landing = false;
-
-	// 地面との当たり判定
-	// 下降中？
-	if (velocity_.y < 0) {
-		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <= 1.0f) {
-			landing = true;
-		}
-	}
-
-	// 接地判定
-	if (onGround_) {
-		// ジャンプ開始
-		if (velocity_.y > 0.0f) {
-			// 空中状態に移行
-			onGround_ = false;
-		}
-	}
-	else {
-		// 着地
-		if (landing) {
-			// めり込み排斥
-			worldTransform_.translation_.y = 1.0f;
-			// 摩擦で横方向速度が減衰する
-			velocity_.x *= (1.0f - kAttenuation);
-			// 下方向速度をリセット
-			velocity_.y = 0.0f;
-			// 接地状態に移行
-			onGround_ = true;
-		}
-	}
-
 
 	// ⑦旋回制御
 	AnimateTurn();
@@ -384,8 +345,17 @@ void Player::CheckMapCeiling(const CollisionMapInfo& info)
 {
 	// 天井に当たった？
 	if (info.ceiling) {
-		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
+		//DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
 		velocity_.y = 0;
+	}
+}
+
+// ⑤壁に接触している場合の処理
+void Player::CheckMapWall(const CollisionMapInfo& info)
+{
+	// 壁接触による減速
+	if (info.hitWall) {
+		velocity_.x *= (1.0f - kAttenuationWall);
 	}
 }
 

@@ -105,9 +105,11 @@ private:
     // ④天井に接触している場合の処理
     void CheckMapCeiling(const CollisionMapInfo& info);
 
+    //⑤壁に接触している場合の処理
+    void CheckMapWall(const CollisionMapInfo& info);
+
     // ⑥接地状態の切り替え処理
     void CheckMapLanding(const CollisionMapInfo& info);
-
 
     // ⑦旋回制御
     void AnimateTurn();
@@ -129,11 +131,11 @@ private:
     KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
 
     static inline const float kBlank = 0.1f;
-
     // 着地時の速度減衰率
-    static inline const float kAttenuationLanding = 0.5f;
-
+    static inline const float kAttenuationLanding = 0.1f;
     // 落下用
     static inline const float kGroundSearchHeight = 0.06f;
+    // 着地時の速度減衰率
+    static inline const float kAttenuationWall = 0.1f;
 };
 
