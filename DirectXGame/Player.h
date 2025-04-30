@@ -103,6 +103,8 @@ private:
     // ④天井に接触している場合の処理
     void CheckMapCeiling(const CollisionMapInfo& info);
 
+    // ⑥接地状態の切り替え処理
+    void CheckMapLanding(const CollisionMapInfo& info);
 
 
     // ⑦旋回制御
@@ -129,8 +131,7 @@ private:
     // 着地時の速度減衰率
     static inline const float kAttenuationLanding = 0.5f;
 
-
-
-
+    // 落下用
+    static inline const float kGroundSearchHeight = 0.06f;
 };
 
