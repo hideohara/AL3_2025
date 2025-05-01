@@ -1,6 +1,7 @@
 #include "GameScene.h"
 #include "MyMath.h"
 
+
 using namespace KamataEngine;
 
 // デストラクタ
@@ -10,6 +11,7 @@ GameScene::~GameScene()
 	delete model_;
 	delete modelBlock_;
 	delete modelSkydome_;
+	delete modelEnemy_;
 
 	// ブロック
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -21,12 +23,12 @@ GameScene::~GameScene()
 	worldTransformBlocks_.clear();
 
 	// クラス
+	delete enemy_;
 	delete player_;
 	delete skydome_;
 	delete debugCamera_;
 	delete mapChipField_;
 	delete cameraController_;
-
 }
 
 // 初期化
@@ -80,6 +82,11 @@ void GameScene::Initialize()
 	CameraController::Rect cameraArea = { 12.0f, 100 - 12.0f, 6.0f, 6.0f };
 	cameraController_->SetMovableArea(cameraArea);
 
+	// 敵
+	modelEnemy_ = Model::CreateFromOBJ("enemy");
+	enemy_ = new Enemy();
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 17);
+	enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
 }
 
 
@@ -92,6 +99,9 @@ void GameScene::Update()
 
 	// スカイドームの更新
 	skydome_->Update();
+
+	// 敵
+	enemy_->Update();
 
 	// デバッグカメラの更新
 	//debugCamera_->Update();
@@ -159,6 +169,8 @@ void GameScene::Draw()
 	// スカイドームの描画
 	skydome_->Draw();
 
+	// 敵
+	enemy_->Draw();
 
 	// ブロックの描画
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

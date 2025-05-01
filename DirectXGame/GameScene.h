@@ -6,6 +6,7 @@
 #include <vector>
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "Enemy.h"
 
 // ゲームシーン
 class GameScene
@@ -37,6 +38,8 @@ private:
 
     // 3Dモデル ブロック
     KamataEngine::Model* modelBlock_ = nullptr;
+    // 3Dモデル 敵
+    KamataEngine::Model* modelEnemy_ = nullptr;
 
     // ブロック
     std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
@@ -64,5 +67,9 @@ private:
 
     // カメラコントローラ
     CameraController* cameraController_;
+
+    // 敵
+    Enemy* enemy_ = nullptr;
+
 };
 
