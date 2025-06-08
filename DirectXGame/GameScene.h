@@ -69,7 +69,11 @@ private:
     CameraController* cameraController_;
 
     // 敵
-    Enemy* enemy_ = nullptr;
+    //Enemy* enemy_ = nullptr;
+    std::list<Enemy*> enemies_;
+
+    // 全ての当たり判定を行う
+    void CheckAllCollisions();
 
 };
 

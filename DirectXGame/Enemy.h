@@ -1,6 +1,9 @@
 #pragma once
 
 #include "KamataEngine.h"
+#include "MyMath.h"
+
+class Player;
 
 // 敵
 class Enemy
@@ -13,6 +16,16 @@ public:
 
     // 描画
     void Draw();
+
+    // ワールド座標を取得
+    KamataEngine::Vector3 GetWorldPosition();
+
+    // AABBを取得
+    AABB GetAABB();
+
+    // 衝突応答
+    void OnCollision(const Player* player);
+
 
 private:
     // ワールド変換データ

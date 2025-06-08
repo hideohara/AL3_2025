@@ -2,6 +2,9 @@
 
 #include "KamataEngine.h"
 #include "MapChipField.h"
+#include "MyMath.h"
+
+class Enemy;
 
 class MapChipField;
 
@@ -23,12 +26,18 @@ public:
 
     const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
 
-
     const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
-
 
     void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
+    // ワールド座標を取得
+    KamataEngine::Vector3 GetWorldPosition();
+
+    // AABBを取得
+    AABB GetAABB();
+
+    // 衝突応答
+    void OnCollision(const Enemy* enemy);
 
 
 private:

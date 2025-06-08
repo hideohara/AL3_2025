@@ -1,6 +1,6 @@
 #define NOMINMAX
 #include "Player.h"
-#include "MyMath.h"
+
 #include <numbers>
 #include <algorithm>
 using namespace KamataEngine;
@@ -69,6 +69,30 @@ void Player::Draw()
 {
 	// 3Dモデルを描画
 	model_->Draw(worldTransform_, *camera_);
+}
+
+// ワールド座標を取得
+Vector3 Player::GetWorldPosition()
+{
+
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得（ワールド座標）
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+// AABBを取得
+AABB Player::GetAABB()
+{
+	Vector3 worldPos = GetWorldPosition();
+	AABB aabb;
+	aabb.min = { worldPos.x - 1.0f / 2.0f, worldPos.y - 1.0f / 2.0f, worldPos.z - 1.0f / 2.0f };
+	aabb.max = { worldPos.x + 1.0f / 2.0f, worldPos.y + 1.0f / 2.0f, worldPos.z + 1.0f / 2.0f };
+	return aabb;
 }
 
 // ①移動入力
@@ -458,4 +482,11 @@ Vector3 Player::CornerPosition(const KamataEngine::Vector3& center, Corner corne
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 }
 
+
+
+void Player::OnCollision(const Enemy* enemy) {
+	(void)enemy;
+	// ジャンプ開始（仮処理）
+	velocity_ += Vector3({0.0f, 1.0f, 0.0f});
+}
 
