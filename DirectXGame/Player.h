@@ -135,7 +135,7 @@ private:
     static inline const float kAttenuationLanding = 0.1f;
     // 落下用
     static inline const float kGroundSearchHeight = 0.06f;
-    // 着地時の速度減衰率
-    static inline const float kAttenuationWall = 0.1f;
+    // 壁の速度減衰率
+    static inline const float kAttenuationWall = 0.5f;
 };
 
