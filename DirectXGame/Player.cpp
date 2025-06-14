@@ -89,7 +89,6 @@ void Player::Update()
 		}
 	}
 
-
 	// ⑦旋回制御
 	AnimateTurn();
 
@@ -220,7 +219,6 @@ void Player::CheckMapCollisionUp(CollisionMapInfo& info)
 	// ブロックにヒット？
 	if (hit) {
 		// めり込みを排除する方向に移動量を設定する
-		// indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 2.0f, 0));
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + info.move + Vector3(0, +kHeight / 2.0f, 0));
 		// めり込み先ブロックの範囲矩形
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
@@ -261,7 +259,6 @@ void Player::AnimateTurn()
 		// 自キャラの角度を設定する
 		worldTransform_.rotation_.y =
 			EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
-
 	}
 }
 
@@ -274,7 +271,6 @@ Vector3 Player::CornerPosition(const KamataEngine::Vector3& center, Corner corne
 		{+kWidth / 2.0f, +kHeight / 2.0f, 0}, // kRightTop
 		{-kWidth / 2.0f, +kHeight / 2.0f, 0}  // kLeftTop
 	};
-
 	return center + offsetTable[static_cast<uint32_t>(corner)];
 }
 
