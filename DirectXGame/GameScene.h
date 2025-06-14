@@ -7,6 +7,7 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "DeathParticles.h"
 
 // ゲームシーン
 class GameScene
@@ -75,5 +76,9 @@ private:
     // 全ての当たり判定を行う
     void CheckAllCollisions();
 
+    // 3Dモデル デスパーティクル
+    KamataEngine::Model* modelDeathParticles_ = nullptr;
+    // デスパーティクル
+    DeathParticles* deathParticles_ = nullptr;
 };
 

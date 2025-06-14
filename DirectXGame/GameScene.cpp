@@ -12,6 +12,7 @@ GameScene::~GameScene()
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete modelEnemy_;
+	delete modelDeathParticles_;
 
 	// ブロック
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -31,6 +32,7 @@ GameScene::~GameScene()
 	delete debugCamera_;
 	delete mapChipField_;
 	delete cameraController_;
+	delete deathParticles_;
 }
 
 // 初期化
@@ -41,12 +43,15 @@ void GameScene::Initialize()
 	// 3Dモデルの生成
 	//model_ = Model::Create();
 	model_ = Model::CreateFromOBJ("player");
+	modelBlock_ = Model::CreateFromOBJ("block");
+	modelEnemy_ = Model::CreateFromOBJ("enemy");
+	modelDeathParticles_ = Model::CreateFromOBJ("deathParticle");
+
 	// カメラの初期化
 	camera_.Initialize();
 
 
-	// 3Dモデルの生成 ブロック 
-	modelBlock_ = Model::CreateFromOBJ("block");
+
 
 	// マップチップフィールドの生成
 	mapChipField_ = new MapChipField;
@@ -58,7 +63,7 @@ void GameScene::Initialize()
 	player_ = new Player();
 	// 自キャラの初期化
 	// 座標をマップチップ番号で指定
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(1, 17);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(3, 17);
 	player_->Initialize(model_, &camera_, playerPosition);
 	player_->SetMapChipField(mapChipField_);
 
@@ -85,7 +90,6 @@ void GameScene::Initialize()
 	cameraController_->SetMovableArea(cameraArea);
 
 	// 敵
-	modelEnemy_ = Model::CreateFromOBJ("enemy");
 	//enemy_ = new Enemy();
 	//Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 17);
 	//enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
@@ -98,20 +102,23 @@ void GameScene::Initialize()
 		enemies_.push_back(newEnemy);
 	}
 
-
-
+	// 仮の生成処理。後で消す。
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(modelDeathParticles_, &camera_, mapChipField_->GetMapChipPositionByIndex(3, 16));
 }
 
 
 // 更新
 void GameScene::Update()
 {
-
 	// 自キャラの更新
 	player_->Update();
 
 	// スカイドームの更新
 	skydome_->Update();
+
+	// デスパーティクルの更新
+	deathParticles_->Update();
 
 	// 敵
 	for (Enemy* enemy : enemies_) {
@@ -184,6 +191,9 @@ void GameScene::Draw()
 
 	// スカイドームの描画
 	skydome_->Draw();
+
+	// デスパーティクルの更新
+	deathParticles_->Draw();
 
 	// 敵
 	for (Enemy* enemy : enemies_) {
