@@ -26,6 +26,9 @@ public:
     // 描画
     void Draw();
 
+    // デスフラグのgetter
+    bool IsFinished() const { return finished_; }
+
 private:
     // テクスチャハンドル
     uint32_t textureHandle_ = 0;
@@ -93,5 +96,9 @@ private:
 
     // フェーズの切り替え
     void ChangePhase();
+
+    // 終了フラグ
+    bool finished_ = false;
+
 };
 

@@ -245,8 +245,22 @@ void GameScene::Update()
 			}
 		}
 
+
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			finished_ = true;
+		}
+
+
+
 		break;
 	}
+
+	
+if (deathParticles_ && deathParticles_->IsFinished()) {
+    finished_ = true;
+}
+
+
 
 }
 
