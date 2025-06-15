@@ -80,5 +80,18 @@ private:
     KamataEngine::Model* modelDeathParticles_ = nullptr;
     // デスパーティクル
     DeathParticles* deathParticles_ = nullptr;
+
+
+    // ゲームのフェーズ（型）
+    enum class Phase {
+        kPlay,  // ゲームプレイ
+        kDeath, // デス演出
+    };
+
+    // ゲームの現在フェーズ（変数）
+    Phase phase_;
+
+    // フェーズの切り替え
+    void ChangePhase();
 };
 
