@@ -2,7 +2,7 @@
 
 #include "KamataEngine.h"
 
-//using namespace KamataEngine;
+class MapChipField;
 
 class Player
 {
@@ -24,6 +24,10 @@ public:
 
 
     const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
+
+
+    // マップチップのセッター
+    void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
 private:
     // ワールド変換データ
@@ -67,6 +71,58 @@ private:
     static inline const float kLimitFallSpeed = 1.0f;
     // ジャンプ初速（上方向）
     static inline const float kJumpAcceleration = 1.0f;
+
+    // マップチップによるフィールド
+    MapChipField* mapChipField_ = nullptr;
+
+
+    // キャラクターの当たり判定サイズ
+    static inline const float kWidth = 0.8f;
+    static inline const float kHeight = 0.8f;
+
+    // マップとの当たり判定情報
+    struct CollisionMapInfo {
+        bool ceiling = false;
+        bool landing = false;
+        bool hitWall = false;
+        KamataEngine::Vector3 move;
+    };
+
+    // ①移動入力
+    void InputMove();
+
+    // ②マップ衝突判定
+    void CheckMapCollision(CollisionMapInfo& info);
+    // マップ衝突判定_上
+    void CheckMapCollisionUp(CollisionMapInfo& info);
+
+    // ③判定結果を反映して移動させる
+    void CheckMapMove(const CollisionMapInfo& info);
+
+    // ④天井に接触している場合の処理
+    void CheckMapCeiling(const CollisionMapInfo& info);
+
+    // ⑦旋回制御
+    void AnimateTurn();
+
+
+    // 角
+    enum Corner {
+        kRightBottom,    // 右下
+        kLeftBottom,     // 左下
+        kRightTop,       // 右上
+        kLeftTop,        // 左上
+
+        kNumCorner       // 要素数
+
+    };
+
+    // 指定した角の座標計算
+    KamataEngine::Vector3 CornerPosition(const KamataEngine::Vector3& center, Corner corner);
+
+    // 隙間
+    static inline const float kBlank = 0.1f;
+
 
 
 };
