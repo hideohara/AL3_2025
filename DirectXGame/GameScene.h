@@ -8,6 +8,7 @@
 #include "CameraController.h"
 #include "Enemy.h"
 #include "DeathParticles.h"
+#include "Fade.h"
 
 // ゲームシーン
 class GameScene
@@ -85,11 +86,15 @@ private:
     DeathParticles* deathParticles_ = nullptr;
 
 
-    // ゲームのフェーズ（型）
+
+    // シーンのフェーズ
     enum class Phase {
-        kPlay,  // ゲームプレイ
-        kDeath, // デス演出
+        kFadeIn,  // フェードイン
+        kPlay,    // ゲームプレイ
+        kDeath,   // デス演出
+        kFadeOut, // フェードアウト
     };
+
 
     // ゲームの現在フェーズ（変数）
     Phase phase_;
@@ -100,5 +105,7 @@ private:
     // 終了フラグ
     bool finished_ = false;
 
+    // フェード
+    Fade* fade_ = nullptr;
 };
 
