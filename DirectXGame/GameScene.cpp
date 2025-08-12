@@ -1,7 +1,6 @@
 #include "GameScene.h"
 #include "MyMath.h"
 
-
 using namespace KamataEngine;
 
 // デストラクタ
@@ -20,7 +19,6 @@ GameScene::~GameScene()
 			delete worldTransformBlock;
 		}
 	}
-
 	worldTransformBlocks_.clear();
 
 	// クラス
@@ -33,7 +31,6 @@ GameScene::~GameScene()
 	delete mapChipField_;
 	delete cameraController_;
 	delete deathParticles_;
-	// フェード
 	delete fade_;
 }
 
@@ -51,9 +48,6 @@ void GameScene::Initialize()
 
 	// カメラの初期化
 	camera_.Initialize();
-
-
-
 
 	// マップチップフィールドの生成
 	mapChipField_ = new MapChipField;
@@ -87,85 +81,53 @@ void GameScene::Initialize()
 	cameraController_->Initialize();
 	cameraController_->SetTarget(player_);
 	cameraController_->Reset();
-
 	CameraController::Rect cameraArea = { 12.0f, 100 - 12.0f, 6.0f, 6.0f };
 	cameraController_->SetMovableArea(cameraArea);
 
 	// 敵
-	//enemy_ = new Enemy();
-	//Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(8, 17);
-	//enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
-
 	for (int32_t i = 0; i < 3; ++i) {
 		Enemy* newEnemy = new Enemy();
 		Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(10+i, 15+i);
 		newEnemy->Initialize(modelEnemy_, &camera_, enemyPosition);
-
 		enemies_.push_back(newEnemy);
 	}
 
-	//// 仮の生成処理。後で消す。
-	//deathParticles_ = new DeathParticles;
-	//deathParticles_->Initialize(modelDeathParticles_, &camera_, mapChipField_->GetMapChipPositionByIndex(3, 16));
-
 	// フェードインから開始
 	phase_ = Phase::kFadeIn;
-
 	// フェード
 	fade_ = new Fade();
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.0f);
-
 }
 
 
 // 更新
 void GameScene::Update()
 {
+	// フェーズ変更
+	ChangePhase();
+
+	// フェーズによる処理
 	switch (phase_) {
 	case Phase::kPlay:
 		// 全ての当たり判定を行う
 		CheckAllCollisions();
-
-		// ゲームプレイフェーズの処理
-		if (player_->IsDead() == true) {
-			// 死亡演出フェーズに切り替え
-			phase_ = Phase::kDeath;
-			// 自キャラの座標を取得
-			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
-			deathParticles_ = new DeathParticles;
-			deathParticles_->Initialize(modelDeathParticles_, &camera_, deathParticlesPosition);
-		}
 		break;
-
 	case Phase::kDeath:
-		// デス演出フェーズの処理
-
 		// デスパーティクルの更新
 		deathParticles_->Update();
-
-		if (deathParticles_ && deathParticles_->IsFinished()) {
-			// フェードアウト開始
-			phase_ = Phase::kFadeOut;
-			fade_->Start(Fade::Status::FadeOut, 1.0f);
-		}
 		break;
-
 	case Phase::kFadeIn:
 		// フェード
 		fade_->Update();
-		if (fade_->IsFinished()) {
-			phase_ = Phase::kPlay;
-		}
 		break;
 	case Phase::kFadeOut:
 		// フェード
 		fade_->Update();
-		if (fade_->IsFinished()) {
-			finished_ = true;
-		}
 		break;
 	}
+
+	// 共通の処理
 
 	// 自キャラの更新
 	player_->Update();
@@ -215,7 +177,6 @@ void GameScene::Update()
 			worldTransformBlock->TransferMatrix();
 		}
 	}
-
 }
 
 // 描画
@@ -228,7 +189,6 @@ void GameScene::Draw()
 	Model::PreDraw(dxCommon->GetCommandList());
 
 	//ここに3Dモデルインスタンスの描画処理を記述する
-	// 
 
 	// 自キャラの描画（修正）
 	if (phase_ == Phase::kPlay || phase_ == Phase::kFadeIn) {
@@ -290,13 +250,11 @@ void GameScene::GenerateBlocks()
 			}
 		}
 	}
-
 }
 
 // 全ての当たり判定を行う
 void GameScene::CheckAllCollisions()
 {
-
 	{
 		// 判定対象1と2の座標
 		AABB aabb1, aabb2;
@@ -319,12 +277,42 @@ void GameScene::CheckAllCollisions()
 			}
 		}
 	}
-
-
 }
 
 // フェーズの切り替え
 void GameScene::ChangePhase()
 {
+	switch (phase_) {
+	case Phase::kPlay:
+		// ゲームプレイフェーズの処理
+		if (player_->IsDead() == true) {
+			// 死亡演出フェーズに切り替え
+			phase_ = Phase::kDeath;
+			// 自キャラの座標を取得
+			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+			deathParticles_ = new DeathParticles;
+			deathParticles_->Initialize(modelDeathParticles_, &camera_, deathParticlesPosition);
+		}
+		break;
+	case Phase::kDeath:
+		if (deathParticles_->IsFinished()) {
+			// フェードアウト開始
+			phase_ = Phase::kFadeOut;
+			fade_->Start(Fade::Status::FadeOut, 1.0f);
+		}
+		break;
+	case Phase::kFadeIn:
+		if (fade_->IsFinished()) {
+			// ゲームプレイへ
+			phase_ = Phase::kPlay;
+		}
+		break;
+	case Phase::kFadeOut:
+		// シーン終了
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
+		break;
+	}
 }
 
